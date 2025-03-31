@@ -19,7 +19,7 @@ export default function ProjectCard({ title, description, image, tags, link, dem
       <div className="relative h-48 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent z-10"></div>
         <Image
-          src={image || "/placeholder.svg"}
+          src={image || "https://placehold.co/800?text=Git&font=PT%20Sans"}
           alt={title}
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"

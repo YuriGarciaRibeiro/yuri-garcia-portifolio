@@ -41,8 +41,7 @@ export default function Home() {
               </h1>
 
               <p className="text-lg text-[#a0a0a0] max-w-2xl">
-                Specialist in systems architecture, APIs and databases. Building the invisible infrastructure
-                that supports modern applications.
+              Architect of scalable systems and APIs, crafting the robust foundations that power modern financial solutions. Expertise in databases and infrastructure that thrives invisibly behind the scenes.
               </p>
             </div>
           </div>
@@ -63,19 +62,17 @@ export default function Home() {
             <h2 className="text-3xl font-bold mb-8 text-white border-l-4 border-[#6366f1] pl-4">About Me</h2>
 
             <div className="space-y-4 text-[#a0a0a0]">
-              <p>
-                Back-end developer with experience in designing and implementing scalable systems, robust APIs and
-                microservices architectures. Specialized in creating efficient solutions to complex problems.
-              </p>
+            <p>
+              Back-end developer specializing in <strong>scalable APIs</strong> and <strong>microservices</strong>, with expertise in .NET and Python. Actively contributing to the integration of Mastercard into BANESE credit cards, designing secure and compliant systems using modern tools like Docker, Kubernetes, and Jenkins. Focused on delivering resilient architectures aligned with financial standards.
+            </p>
 
-              <p>
-                My approach combines solid software engineering principles with modern development best practices. I constantly seek to improve my knowledge and explore new technologies to create more efficient and secure systems.
-              </p>
+            <p>
+              My work blends software engineering principles with agile methodologies (Scrum), backed by certifications in Google Cloud, .NET, and Docker. A two-time <strong>NASA Space Apps Brazil winner</strong> (2023 & 2024), I tackle challenges through innovative solutions. Currently deepening my knowledge of <strong>Go (Golang)</strong> to enhance distributed systems expertise.
+            </p>
 
-              <p>
-                When I&apos;m not coding, I spend my time studying distributed systems architectures,
-                database optimization, and application security.
-              </p>
+            <p>
+              When not coding, I explore database optimization, application security, and emerging technologies to build future-ready systems.
+            </p>
             </div>
           </div>
         </div>
