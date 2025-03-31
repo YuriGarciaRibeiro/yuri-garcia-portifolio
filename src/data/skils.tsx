@@ -25,20 +25,20 @@ export const skills = {
     "Languages": {
       "itens": [
         {
-          "name": "JavaScript",
-          "Description": "Runtime environment for server-side applications",
+          "name": "Go",
+          "Description": "Statically typed language for concurrent programming",
+        },
+        {
+          "name": "C#",
+          "Description": "Object-oriented language for .NET applications",
         },
         {
           "name": "Python",
           "Description": "High-level language for scripting and automation",
         },
         {
-          "name": "Java",
-          "Description": "Object-oriented programming for enterprise applications",
-        },
-        {
-          "name": "Go",
-          "Description": "Statically typed language for concurrent programming",
+          "name": "JavaScript",
+          "Description": "Runtime environment for server-side applications",
         },
       ],
       "icon": <Code className="h-6 w-6 text-[#6366f1]" />,
@@ -67,21 +67,17 @@ export const skills = {
     "Frameworks": {
       "itens": [
         {
-          "name": "Express",
-          "Description": "Minimalist web framework for Node.js REST APIs",
+          "name": ".NET",
+          "Description": "Framework for building cross-platform applications",
         },
         {
-          "name": "Django",
-          "Description": "Batteries-included Python web framework",
+          "name": "ASP.NET",
+          "Description": "Framework for building web applications",
         },
         {
-          "name": "React",
-          "Description": "Library for building interactive UIs",
-        },
-        {
-          "name": "Spring",
-          "Description": "Enterprise Java framework with dependency injection",
-        },
+          "name": "Next.js",
+          "Description": "Framework for server-rendered React applications",
+        }
       ],
       "icon": <Code className="h-6 w-6 text-[#6366f1]" />,
     }

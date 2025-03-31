@@ -8,6 +8,7 @@ import { skills } from "@/data/skils"
 import { projects } from "@/data/projects"
 import ExperienceTimeline from "@/components/experience-timeline"
 import { FaWhatsapp } from "react-icons/fa";
+import Navigation from "@/components/navigation"
 
 export default function Home() {
   return (
@@ -17,23 +18,7 @@ export default function Home() {
         <div className="text-xl font-bold text-white">
           <span className="text-[#6366f1]">Dev</span> Yuri Garcia
         </div>
-        <div className="flex gap-6">
-          <Button variant="link" className="text-[#a0a0a0] hover:text-white" asChild>
-            <Link href="#about">About</Link>
-          </Button>
-          <Button variant="link" className="text-[#a0a0a0] hover:text-white" asChild>
-            <Link href="#skills">Skills</Link>
-          </Button>
-          <Button variant="link" className="text-[#a0a0a0] hover:text-white" asChild>
-            <Link href="#projects">Projects</Link>
-          </Button>
-          <Button variant="link" className="text-[#a0a0a0] hover:text-white" asChild>
-            <Link href="#experience">Profissional Experience</Link>
-          </Button>
-          <Button variant="link" className="text-[#a0a0a0] hover:text-white" asChild>
-            <Link href="#contact">Contact</Link>
-          </Button>
-        </div>
+        <Navigation />
       </nav>
 
       {/* Hero Section */}
