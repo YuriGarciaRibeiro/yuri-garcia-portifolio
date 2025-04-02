@@ -25,15 +25,15 @@ export default function Home() {
       <section className="container mx-auto px-4 py-20">
         <div className="max-w-3xl mx-auto">
           <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12">
-            <div className="relative w-32 h-32 rounded-full overflow-hidden border-2 border-[#1f1f1f] bg-[#1a1a1a]">
-              <Image
-                src="https://avatars.githubusercontent.com/u/81641949"
-                alt="Profile"
-                width={150}
-                height={150}
-                className="object-cover"
-              />
-            </div>
+          <div className="relative w-40 h-40 rounded-full overflow-hidden border-2 border-[#6366f1] bg-[#1a1a1a]">
+            <Image 
+              src="https://avatars.githubusercontent.com/u/81641949" 
+              alt="Profile" 
+              fill
+              sizes="160px"
+              className="object-cover"
+            />
+          </div>
 
             <div className="text-center md:text-left">
               <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">
