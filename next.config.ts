@@ -8,6 +8,5 @@ const nextConfig: NextConfig = {
     domains: ['avatars.githubusercontent.com'],
     unoptimized: true,
   },
-  basePath: "/yuri-garcia-portifolio",
 };
 export default nextConfig;
