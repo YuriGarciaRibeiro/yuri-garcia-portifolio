@@ -7,11 +7,12 @@ import { motion } from "framer-motion"
 import { CheckCircle, Circle, Clock, ExternalLink, GitFork, Github, Star } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useState } from "react"
 
-type ProjectCardProps = Project
+interface FeaturedProjectProps extends Project {
+  index: number
+}
 
-export default function ProjectCard({
+export default function FeaturedProject({
   title,
   description,
   longDescription,
@@ -21,9 +22,8 @@ export default function ProjectCard({
   demo,
   status,
   githubStats,
-}: ProjectCardProps) {
-  const [isHovered, setIsHovered] = useState(false)
-
+  index,
+}: FeaturedProjectProps) {
   // Generate a consistent color based on the project title
   const generateColor = (title: string) => {
     let hash = 0
@@ -36,8 +36,9 @@ export default function ProjectCard({
   }
 
   // Generate placeholder image if none provided
-  const projectImage = image || `/placeholder.svg?height=400&width=800`
+  const projectImage = image || `/placeholder.svg?height=600&width=800`
   const bgColor = generateColor(title)
+  const isEven = index % 2 === 0
 
   // Format date
   const formatDate = (dateString: string) => {
@@ -51,19 +52,19 @@ export default function ProjectCard({
       case "completed":
         return (
           <div className="flex items-center gap-1 text-green-500">
-            <CheckCircle className="h-3 w-3" /> Completed
+            <CheckCircle className="h-4 w-4" /> Completed
           </div>
         )
       case "in-progress":
         return (
           <div className="flex items-center gap-1 text-yellow-500">
-            <Clock className="h-3 w-3" /> In Progress
+            <Clock className="h-4 w-4" /> In Progress
           </div>
         )
       case "planned":
         return (
           <div className="flex items-center gap-1 text-blue-500">
-            <Circle className="h-3 w-3" /> Planned
+            <Circle className="h-4 w-4" /> Planned
           </div>
         )
       default:
@@ -73,51 +74,40 @@ export default function ProjectCard({
 
   return (
     <motion.div
-      className="bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#2a2a2a] hover:border-[#6366f1] transition-colors duration-300 group h-full flex flex-col"
-      whileHover={{ y: -5 }}
+      className={`flex flex-col ${isEven ? "md:flex-row" : "md:flex-row-reverse"} gap-6 md:gap-10 bg-[#1a1a1a] rounded-lg overflow-hidden border border-[#2a2a2a] hover:border-[#6366f1] transition-colors duration-300 p-6`}
       initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
     >
-      <div className="relative h-48 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+      <div className="relative w-full md:w-1/2 h-64 md:h-auto rounded-lg overflow-hidden">
         {image ? (
-          <Image
-            src={projectImage || "/placeholder.svg"}
-            alt={title}
-            fill
-            className="object-cover transition-transform duration-500 group-hover:scale-105"
-          />
+          <Image src={projectImage || "/placeholder.svg"} alt={title} fill className="object-cover" />
         ) : (
           <div
-            className="absolute inset-0 flex items-center justify-center transition-transform duration-500 group-hover:scale-105"
+            className="absolute inset-0 flex items-center justify-center"
             style={{ background: `linear-gradient(135deg, ${bgColor}, ${bgColor}88)` }}
           >
-            <div className="text-4xl font-bold text-white/90 p-4 text-center">
+            <div className="text-6xl font-bold text-white/90 p-4 text-center">
               {title.substring(0, 2).toUpperCase()}
             </div>
           </div>
         )}
+      </div>
 
-        <div className="absolute top-2 right-2 z-20">
+      <div className="flex flex-col justify-center w-full md:w-1/2">
+        <div className="flex items-center gap-3 mb-2">
+          <Badge className="bg-[#6366f1] hover:bg-[#4f46e5] text-white border-none">Featured Project</Badge>
           {status && (
-            <Badge variant="outline" className="bg-[#0f0f0f]/80 backdrop-blur-sm border-none text-xs">
+            <Badge variant="outline" className="bg-[#0f0f0f] border-[#333]">
               {getStatusIndicator()}
             </Badge>
           )}
         </div>
 
-        <div className="absolute bottom-0 left-0 right-0 z-20 p-4">
-          <h3 className="text-xl font-bold text-white">{title}</h3>
-        </div>
-      </div>
+        <h3 className="text-2xl font-bold text-white mb-3">{title}</h3>
 
-      <div className="p-6 flex-1 flex flex-col">
-        <p className="text-[#a0a0a0] mb-4 line-clamp-3">
-          {isHovered && longDescription ? longDescription : description}
-        </p>
+        <p className="text-[#a0a0a0] mb-4">{longDescription || description}</p>
 
         <div className="flex flex-wrap gap-2 mb-4">
           {tags.map((tag, index) => (
@@ -132,40 +122,44 @@ export default function ProjectCard({
         </div>
 
         {githubStats && (
-          <div className="flex gap-4 mb-4 text-xs text-[#a0a0a0]">
+          <div className="flex gap-4 mb-4 text-sm text-[#a0a0a0]">
             {githubStats.stars !== undefined && (
               <div className="flex items-center gap-1">
-                <Star className="h-3 w-3 text-yellow-500" />
+                <Star className="h-4 w-4 text-yellow-500" />
                 <span>{githubStats.stars}</span>
               </div>
             )}
             {githubStats.forks !== undefined && (
               <div className="flex items-center gap-1">
-                <GitFork className="h-3 w-3 text-[#6366f1]" />
+                <GitFork className="h-4 w-4 text-[#6366f1]" />
                 <span>{githubStats.forks}</span>
               </div>
             )}
             {githubStats.lastUpdated && (
               <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+                <Clock className="h-4 w-4" />
                 <span>Updated {formatDate(githubStats.lastUpdated)}</span>
               </div>
             )}
           </div>
         )}
 
-        <div className="flex justify-between mt-auto pt-4">
+        <div className="flex gap-4 mt-2">
           {link && (
-            <Button variant="ghost" size="sm" className="text-[#a0a0a0] hover:text-white hover:bg-[#6366f1]/10" asChild>
+            <Button className="bg-[#6366f1] hover:bg-[#4f46e5] text-white" asChild>
               <Link href={link} target="_blank" rel="noopener noreferrer">
-                <Github className="mr-2 h-4 w-4" /> GitHub
+                <Github className="mr-2 h-4 w-4" /> View on GitHub
               </Link>
             </Button>
           )}
           {demo && (
-            <Button variant="ghost" size="sm" className="text-[#a0a0a0] hover:text-white hover:bg-[#6366f1]/10" asChild>
+            <Button
+              variant="outline"
+              className="border-[#333] text-[#a0a0a0] hover:text-white hover:border-[#6366f1]"
+              asChild
+            >
               <Link href={demo} target="_blank" rel="noopener noreferrer">
-                <ExternalLink className="mr-2 h-4 w-4" /> Demo
+                <ExternalLink className="mr-2 h-4 w-4" /> Live Demo
               </Link>
             </Button>
           )}
