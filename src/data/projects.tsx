@@ -27,11 +27,7 @@ export const projects: Project[] = [
     demo: "",
     featured: true,
     status: "completed",
-    githubStats: {
-      stars: 42,
-      forks: 8,
-      lastUpdated: "2024-03-15",
-    },
+
   },
   {
     title: "ZipZop Chat",
@@ -44,11 +40,6 @@ export const projects: Project[] = [
     demo: "",
     featured: true,
     status: "in-progress",
-    githubStats: {
-      stars: 28,
-      forks: 5,
-      lastUpdated: "2024-04-01",
-    },
   },
   {
     title: "URL Shortener",
@@ -82,7 +73,7 @@ export const projects: Project[] = [
     link: "https://github.com/YuriGarciaRibeiro/TCC",
     demo: "",
     featured: true,
-    status: "completed",
+    status: "in-progress",
   },
 ]
 
