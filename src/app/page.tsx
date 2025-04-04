@@ -285,7 +285,7 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto mb-12">
             <SectionHeading
-              title="Certifications & Awards"
+              title="Main Certifications and Awards"
               subtitle="Professional certifications and recognition that validate my expertise and commitment to excellence in software development."
             />
           </div>
