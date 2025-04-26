@@ -75,5 +75,17 @@ export const projects: Project[] = [
     featured: true,
     status: "in-progress",
   },
+  {
+    title: "Project Templates",
+    description: "Clean Architecture and Production-Ready Project Templates.",
+    longDescription:
+      "A curated collection of professional project templates focused on clean architecture, modularity, and real-world development practices. Featuring ASP.NET Core APIs with Hexagonal Architecture, Minimal APIs, Auth Services, and Next.js frontends. Designed to speed up development and enforce solid engineering standards.",
+    image: "https://placehold.co/800x400?text=Templates&font=roboto",
+    tags: ["ASP.NET Core", "Hexagonal Architecture", "MediatR", "FluentValidation", "Next.js", "Clean Architecture"],
+    link: "https://github.com/YuriGarciaRibeiro/project-templates",
+    demo: "",
+    featured: true,
+    status: "in-progress",
+  }  
 ]
 
