@@ -1,65 +1,41 @@
 "use client"
 
 import { motion } from "framer-motion"
+import { useSkills } from "@/hooks/use-skills"
+import { Loader2 } from "lucide-react"
 
-interface TechItem {
-  name: string
-  category: string
-}
+// Mapeamento de categoria (número para string)
+const SkillCategoryMap: Record<number, string> = {
+  0: 'Languages',
+  1: 'Frameworks',
+  2: 'Databases',
+  3: 'DevOps',
+  4: 'Tools',
+  5: 'Other'
+};
+
+// Helper para obter o nome da categoria
+const getCategoryName = (category: number | string): string => {
+  if (typeof category === 'number') {
+    return SkillCategoryMap[category] || 'Other';
+  }
+  return category;
+};
 
 export default function TechStack() {
-  const techItems: TechItem[] = [
-    // Backend
-    { name: "C#", category: "Backend" },
-    { name: ".NET Core", category: "Backend" },
-    { name: "ASP.NET", category: "Backend" },
-    { name: "Go", category: "Backend" },
-    { name: "Python", category: "Backend" },
+  const { skills, loading, error } = useSkills()
 
-    // Frontend
-    { name: "Next", category: "Frontend" },
-    { name: "React", category: "Frontend" },
+  // Map API categories to display categories
+  const categoryDisplayMap: Record<string, string> = {
+    'Languages': 'Languages',
+    'Frameworks': 'Frameworks',
+    'Databases': 'Database',
+    'DevOps': 'Cloud & DevOps',
+    'Tools': 'Tools',
+    'Other': 'Other'
+  }
 
-    // Database
-    { name: "SQL Server", category: "Database" },
-    { name: "PostgreSQL", category: "Database" },
-    { name: "Redis", category: "Database" },
-
-    // Agile
-    { name: "Scrum", category: "Agile" },
-    { name: "Sprints", category: "Agile" },
-    { name: "OKRs", category: "Agile" },
-
-    // Management
-    { name: "Azure DevOps", category: "Management" },
-
-    // Cloud & DevOps
-    { name: "Docker", category: "DevOps" },
-    { name: "Kubernetes", category: "DevOps" },
-    { name: "Jenkins", category: "DevOps" },
-
-    // Tools
-    { name: "Visual Studio", category: "Tools" },
-    { name: "VS Code", category: "Tools" },
-    { name: "Git", category: "Tools" },
-    { name: "Postman", category: "Tools" },
-    { name: "ApiDog", category: "Tools" },
-
-    // Testing
-    { name: "xUnit", category: "Testing" },
-  ]
-
-  // Group and sort categories
-  const groupedItems = techItems.reduce(
-    (acc, item) => {
-      if (!acc[item.category]) acc[item.category] = []
-      acc[item.category].push(item)
-      return acc
-    },
-    {} as Record<string, TechItem[]>,
-  )
-
-  const categoryOrder = ["Backend", "Frontend", "Database", "DevOps", "Agile", "Management", "Tools", "Testing"]
+  const categoryOrder = ["Languages", "Frameworks", "Database", "Cloud & DevOps", "Tools", "Other"]
 
   // Function to generate a consistent color based on the tech name
   const generateColor = (name: string) => {
@@ -83,6 +59,38 @@ export default function TechStack() {
     return colors[Math.abs(hash) % colors.length]
   }
 
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-12">
+        <Loader2 className="w-6 h-6 animate-spin text-[#6366f1]" />
+        <span className="ml-3 text-[#a0a0a0]">Loading skills...</span>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-500">Error loading skills: {error}</p>
+      </div>
+    )
+  }
+
+  // Agrupar skills por categoria (usando mapeamento numérico)
+  const groupedItems: Record<string, Array<{ name: string }>> = {}
+
+  skills.forEach((skill) => {
+    const apiCategory = getCategoryName(skill.category)
+    const displayCategory = categoryDisplayMap[apiCategory] || apiCategory
+    
+    if (!groupedItems[displayCategory]) {
+      groupedItems[displayCategory] = []
+    }
+    groupedItems[displayCategory].push({ name: skill.name })
+  })
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {categoryOrder.map(
@@ -97,13 +105,7 @@ export default function TechStack() {
               transition={{ delay: catIndex * 0.1 }}
             >
               <h4 className="text-[#6366f1] font-semibold text-sm md:text-base">
-                {category === "Agile"
-                  ? "Metodologias Ágeis"
-                  : category === "Management"
-                    ? "Gestão"
-                    : category === "DevOps"
-                      ? "Cloud & DevOps"
-                      : category}
+                {category}
               </h4>
               <div className="flex flex-wrap gap-2">
                 {groupedItems[category].map((item, itemIndex) => {

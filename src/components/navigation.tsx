@@ -10,6 +10,7 @@ import { Menu, X } from "lucide-react"
 export default function Navigation() {
   const [isOpen, setIsOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("")
+  const [isScrolling, setIsScrolling] = useState(false)
 
   // Function for smooth scrolling
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, sectionId: string) => {
@@ -17,18 +18,32 @@ export default function Navigation() {
 
     const section = document.getElementById(sectionId)
     if (section) {
-      // Smooth scroll to section
-      section.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
+      // Set scrolling flag to prevent scroll handler from overriding
+      setIsScrolling(true)
+      setActiveSection(sectionId)
+
+      // Calculate position with offset for better centering
+      const navHeight = 80 // Height of the fixed navigation
+      const offset = 50 // Additional offset for breathing room
+      const elementPosition = section.getBoundingClientRect().top + window.scrollY
+      const offsetPosition = elementPosition - navHeight - offset
+
+      // Smooth scroll to calculated position
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: "smooth"
       })
 
       // Update URL with hash (optional)
       window.history.pushState({}, "", `#${sectionId}`)
-      setActiveSection(sectionId)
 
       // Close mobile menu if open
       setIsOpen(false)
+
+      // Reset scrolling flag after animation completes
+      setTimeout(() => {
+        setIsScrolling(false)
+      }, 1000)
     }
   }
 
@@ -41,9 +56,14 @@ export default function Navigation() {
       if (section) {
         // Small timeout to ensure page is fully loaded
         setTimeout(() => {
-          section.scrollIntoView({
-            behavior: "smooth",
-            block: "start",
+          const navHeight = 80
+          const offset = 50
+          const elementPosition = section.getBoundingClientRect().top + window.scrollY
+          const offsetPosition = elementPosition - navHeight - offset
+          
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: "smooth"
           })
         }, 100)
       }
@@ -51,31 +71,41 @@ export default function Navigation() {
 
     // Add scroll event listener to update active section
     const handleScroll = () => {
-      const sections = ["about", "skills", "projects", "experience", "contact"]
-      const scrollPosition = window.scrollY + 100
+      // Don't update if we're in the middle of a click-triggered scroll
+      if (isScrolling) return
 
+      const sections = ["about", "skills", "certifications", "projects", "experience", "contact"]
+      const scrollPosition = window.scrollY + 150
+
+      // Iterate from bottom to top to find the current section
+      // This ensures we detect the most specific section first
+      let currentSection = ""
+      
       for (const section of sections) {
         const element = document.getElementById(section)
         if (element) {
           const offsetTop = element.offsetTop
-          const offsetHeight = element.offsetHeight
-
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
+          
+          // If we've scrolled past the top of this section, it's a candidate
+          if (scrollPosition >= offsetTop) {
+            currentSection = section
           }
         }
+      }
+      
+      if (currentSection) {
+        setActiveSection(currentSection)
       }
     }
 
     window.addEventListener("scroll", handleScroll)
     return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+  }, [isScrolling])
 
   const navItems = [
     { name: "About", id: "about" },
     { name: "Skills", id: "skills" },
-    {name : "Certifications", id: "certifications"},
+    { name: "Certifications", id: "certifications" },
     { name: "Projects", id: "projects" },
     { name: "Experience", id: "experience" },
     { name: "Contact", id: "contact" },
@@ -84,22 +114,26 @@ export default function Navigation() {
   return (
     <>
       {/* Desktop Navigation */}
-      <div className="hidden md:flex gap-6">
+      <div className="hidden md:flex items-center gap-1">
         {navItems.map((item) => (
-          <Button
+          <a
             key={item.id}
-            variant="link"
-            className={`${
-              activeSection === item.id ? "text-[#6366f1] font-medium" : "text-[#a0a0a0] hover:text-white"
-            } relative`}
+            href={`#${item.id}`}
+            onClick={(e) => scrollToSection(e, item.id)}
+            className={`px-3 py-2 text-sm font-medium rounded-md transition-colors relative ${
+              activeSection === item.id
+                ? "text-[#6366f1]"
+                : "text-[#a0a0a0] hover:text-white hover:bg-[#1a1a1a]"
+            }`}
           >
-            <a href={`#${item.id}`} onClick={(e) => scrollToSection(e, item.id)}>
-              {item.name}
-              {activeSection === item.id && (
-                <motion.span className="absolute -bottom-1 left-0 right-0 h-0.5 bg-[#6366f1]" layoutId="underline" />
-              )}
-            </a>
-          </Button>
+            {item.name}
+            {activeSection === item.id && (
+              <motion.span
+                className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#6366f1]"
+                layoutId="underline"
+              />
+            )}
+          </a>
         ))}
       </div>
 
@@ -134,25 +168,23 @@ export default function Navigation() {
               <X className="h-6 w-6" />
             </Button>
 
-            <div className="flex flex-col items-center gap-8">
-              {navItems.map((item) => (
-                <motion.div
+            <div className="flex flex-col items-center gap-6">
+              {navItems.map((item, index) => (
+                <motion.a
                   key={item.id}
+                  href={`#${item.id}`}
+                  onClick={(e) => scrollToSection(e, item.id)}
+                  className={`text-2xl font-medium transition-colors ${
+                    activeSection === item.id
+                      ? "text-[#6366f1]"
+                      : "text-[#a0a0a0] hover:text-white"
+                  }`}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: navItems.indexOf(item) * 0.1 }}
+                  transition={{ delay: index * 0.1 }}
                 >
-                  <Button
-                    variant="link"
-                    className={`text-2xl ${
-                      activeSection === item.id ? "text-[#6366f1] font-medium" : "text-[#a0a0a0] hover:text-white"
-                    }`}
-                  >
-                    <a href={`#${item.id}`} onClick={(e) => scrollToSection(e, item.id)}>
-                      {item.name}
-                    </a>
-                  </Button>
-                </motion.div>
+                  {item.name}
+                </motion.a>
               ))}
             </div>
           </motion.div>

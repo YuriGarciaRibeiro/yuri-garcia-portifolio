@@ -119,6 +119,11 @@
   body {
     @apply bg-background text-foreground;
   }
+  
+  /* Add scroll margin for anchor navigation */
+  section[id] {
+    scroll-margin-top: 130px;
+  }
 }
 
 

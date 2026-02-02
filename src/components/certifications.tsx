@@ -1,91 +1,16 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { Award, ExternalLink, ChevronLeft, ChevronRight } from "lucide-react"
+import { Award, ExternalLink, ChevronLeft, ChevronRight, Loader2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { useMediaQuery } from "@/hooks/use-media-query"
 import { Button } from "@/components/ui/button"
-
-interface Certification {
-  title: string
-  issuer: string
-  date: string
-  image: string
-  link?: string
-  description?: string
-}
+import { useCertifications } from "@/hooks/use-certifications"
 
 export default function Certifications() {
-  const certifications: Certification[] = [
-    {
-      title: "NASA Space Apps Challenge Winner",
-      issuer: "NASA",
-      date: "2024",
-      image: "https://placehold.co/800?text=NASA+Space+Apps+Challenge&font=roboto",
-      link: "https://drive.google.com/file/d/1vWFDJaEDm1spyLh6MHzBylzyyUvEgcrB/view?usp=sharing",
-      description:
-        "First place for the second consecutive year, demonstrating consistent excellence in space technology innovation.",
-    },
-    {
-      title: "NASA Space Apps Challenge Winner",
-      issuer: "NASA",
-      date: "2023",
-      image: "https://placehold.co/800?text=NASA+Space+Apps+Challenge&font=roboto",
-      link: "#",
-      description:
-        "First place in the Brazilian stage of NASA's global hackathon, developing innovative space technology solutions.",
-    },
-    {
-      title: "Google Cloud Computing Foundations: Cloud Computing Fundamentals",
-      issuer: "Google Cloud",
-      date: "2024",
-      image: "https://placehold.co/800?text=Google+Cloud+Foundations+Fundamentals&font=roboto",
-      link: "https://www.cloudskillsboost.google/public_profiles/accd8d56-a969-4369-a7d8-facd90861e94/badges/3615673?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share",
-      description: "Core concepts of cloud computing with hands-on experience on Google Cloud.",
-    },
-    {
-      title: "Google Cloud Computing Foundations: Infrastructure in Google Cloud",
-      issuer: "Google Cloud",
-      date: "2024",
-      image: "https://placehold.co/800?text=Google+Cloud+Foundations+Infrastructure&font=roboto",
-      link: "https://www.cloudskillsboost.google/public_profiles/accd8d56-a969-4369-a7d8-facd90861e94/badges/3620376?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share",
-      description: "Focus on cloud infrastructure components, including compute, storage, and networking.",
-    },
-    {
-      title: "Google Cloud Computing Foundations: Networking & Security in Google Cloud",
-      issuer: "Google Cloud",
-      date: "2024",
-      image: "https://placehold.co/800?text=Google+Cloud+Networking+Security&font=roboto",
-      link: "https://www.cloudskillsboost.google/public_profiles/accd8d56-a969-4369-a7d8-facd90861e94/badges/3623795?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share",
-      description: "Covers the basics of cloud networking and securing cloud environments.",
-    },
-    {
-      title: "Google Cloud Computing Foundations: Data, ML, and AI in Google Cloud",
-      issuer: "Google Cloud",
-      date: "2024",
-      image: "https://placehold.co/800?text=Google+Cloud+ML+AI&font=roboto",
-      link: "https://www.cloudskillsboost.google/public_profiles/accd8d56-a969-4369-a7d8-facd90861e94/badges/3625178?utm_medium=social&utm_source=linkedin&utm_campaign=ql-social-share",
-      description: "Introduction to data analytics, machine learning, and AI in the cloud.",
-    },
-    {
-      title: "Docker for Developers (with Docker Swarm and Kubernetes)",
-      issuer: "Udemy",
-      date: "2023",
-      image: "https://placehold.co/800?text=Docker+for+Developers&font=roboto",
-      link: "https://www.udemy.com/certificate/UC-d8c8ebb8-9080-424b-87e9-7c64f0e1ec7c/",
-      description: "Hands-on training in Docker, Swarm, and Kubernetes for production-ready applications.",
-    },
-    {
-      title: "Bootcamp .NET Developer",
-      issuer: "DIO",
-      date: "2023",
-      image: "https://placehold.co/800?text=.NET+Bootcamp+DIO&font=roboto",
-      link: "https://hermes.dio.me/certificates/C9EZVMDQ.pdf",
-      description: "Complete bootcamp for .NET development including backend and cloud solutions.",
-    },
-  ];
+  const { certifications, loading, error } = useCertifications()
   
 
   const isMobile = useMediaQuery("(max-width: 768px)")
@@ -113,6 +38,31 @@ export default function Certifications() {
       setCurrentPage(0)
     }
   }, [isMobile, isTablet, certifications.length, currentPage])
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-[#6366f1]" />
+        <span className="ml-3 text-[#a0a0a0]">Loading certifications...</span>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-red-500 mb-4">Error loading certifications: {error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-[#6366f1] text-white rounded-md hover:bg-[#5558e3] transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    )
+  }
 
   const nextPage = () => {
     setCurrentPage((prev) => (prev + 1) % totalPages)
@@ -179,7 +129,7 @@ export default function Certifications() {
                   <div className="flex items-center gap-2 text-sm text-[#a0a0a0]">
                     <Award className="h-3 w-3 text-[#6366f1]" />
                     <span>
-                      {cert.issuer} • {cert.date}
+                      {cert.issuer} • {new Date(cert.issueDate).getFullYear()}
                     </span>
                   </div>
                 </div>
@@ -191,10 +141,10 @@ export default function Certifications() {
                 </div>
               )}
 
-              {cert.link && (
+              {cert.credentialUrl && (
                 <div className="px-4 pb-4">
                   <Link
-                    href={cert.link}
+                    href={cert.credentialUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-[#6366f1] text-sm hover:text-[#4f46e5] flex items-center gap-1"

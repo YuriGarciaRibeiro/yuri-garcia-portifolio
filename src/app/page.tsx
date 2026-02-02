@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Github, Mail, ChevronDown, Briefcase, MessageSquare } from "lucide-react"
 import TechStack from "@/components/tech-stack"
-import { skills } from "@/data/skils"
 import ExperienceTimeline from "@/components/experience-timeline"
 import { FaWhatsapp } from "react-icons/fa"
 import Navigation from "@/components/navigation"
@@ -108,11 +107,11 @@ export default function Home() {
                 animate={{ opacity: isLoaded ? 1 : 0, y: isLoaded ? 0 : 20 }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                Back-End <TextGradient>Developer</TextGradient>
+                Software <TextGradient>Engineer</TextGradient>
               </motion.h1>
 
               <AnimatedText
-                text="Architect of scalable systems and APIs, crafting the robust foundations that power modern financial solutions. Expertise in databases and infrastructure that thrives invisibly behind the scenes."
+                text="Software Engineer with 3+ years building scalable backend systems in .NET, distributed architectures, and high-reliability environments. Specialized in RESTful APIs for financial systems and currently working on AI-driven products."
                 className="text-lg text-[#a0a0a0] max-w-2xl"
                 delay={0.3}
               />
@@ -167,7 +166,7 @@ export default function Home() {
       <section id="about" className="py-20 bg-[#0a0a0a]">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto">
-            <SectionHeading title="About Me" subtitle="My journey, expertise, and passion for backend development" />
+            <SectionHeading title="About Me" subtitle="My journey, expertise, and passion for software engineering" />
 
             <div className="space-y-4 text-[#a0a0a0]">
               <motion.p
@@ -176,11 +175,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.1 }}
               >
-                Back-end developer specializing in <TextGradient>scalable APIs</TextGradient> and{" "}
-                <TextGradient>microservices</TextGradient>, with expertise in .NET and Python. Actively contributing to
-                the integration of Mastercard into BANESE credit cards, designing secure and compliant systems using
-                modern tools like Docker, Kubernetes, and Jenkins. Focused on delivering resilient architectures aligned
-                with financial standards.
+                Software Engineer with <span className="text-white font-semibold">3+ years of experience</span> building, scaling, and operating backend systems in production, with a strong focus on <TextGradient>.NET (currently .NET 10)</TextGradient>, distributed architectures, and high-reliability environments.
               </motion.p>
 
               <motion.p
@@ -189,11 +184,7 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
-                My work blends software engineering principles with agile methodologies (Scrum), backed by
-                certifications in Google Cloud, .NET, and Docker. A two-time{" "}
-                <TextGradient>NASA Space Apps Brazil winner</TextGradient> (2023 & 2024), I tackle challenges through
-                innovative solutions. Currently deepening my knowledge of <TextGradient>Go (Golang)</TextGradient> to
-                enhance distributed systems expertise.
+                Experienced in designing and maintaining <span className="text-white font-semibold">scalable RESTful APIs</span> for high-throughput systems, particularly in the <TextGradient>financial and banking domain</TextGradient>. Strong advocate of <span className="text-white font-semibold">Clean Architecture</span>, <span className="text-white font-semibold">DDD fundamentals</span>, and <span className="text-white font-semibold">SOLID principles</span> to deliver maintainable, testable, and resilient software.
               </motion.p>
 
               <motion.p
@@ -202,8 +193,16 @@ export default function Home() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: 0.3 }}
               >
-                When not coding, I explore database optimization, application security, and emerging technologies to
-                build future-ready systems.
+                Currently working on a <TextGradient>highly AI-driven product</TextGradient>, integrating LLM APIs, building data pipelines, handling model evaluation and versioning, and implementing AI observability with monitoring of latency, cost, failures, and model behavior in production.
+              </motion.p>
+
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                Hands-on experience with automated testing, asynchronous messaging, containerized environments, and CI/CD pipelines. Background also includes frontend and mobile development with <TextGradient>React, Next.js, and Flutter</TextGradient>, enabling effective collaboration in product-oriented teams.
               </motion.p>
             </div>
           </div>
@@ -222,56 +221,13 @@ export default function Home() {
             className="max-w-3xl mx-auto"
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-            {Object.entries(skills).map(([category, data], index) => (
-              <CardHoverEffect
-                key={category}
-                className="bg-[#1a1a1a] p-6 rounded-lg border border-[#2a2a2a] transition-all duration-300"
-              >
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                >
-                  <div className="flex items-center gap-4 mb-6">
-                    <div className="bg-[#6366f1]/10 h-12 w-12 rounded-lg flex items-center justify-center">
-                      {data.icon}
-                    </div>
-                    <h3 className="text-xl font-bold text-white">{category}</h3>
-                  </div>
-                  <ul className="space-y-3 text-[#a0a0a0]">
-                    {data.itens.map((item, itemIndex) => (
-                      <motion.li
-                        key={itemIndex}
-                        className="flex items-start gap-2"
-                        initial={{ opacity: 0, x: -10 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.3, delay: 0.1 + itemIndex * 0.05 }}
-                      >
-                        <span className="text-[#6366f1] font-bold">•</span>
-                        <div>
-                          <span>
-                            {item.name} - <span className="text-[#7a7a7a]">{item.Description}</span>
-                          </span>
-                        </div>
-                      </motion.li>
-                    ))}
-                  </ul>
-                </motion.div>
-              </CardHoverEffect>
-            ))}
-          </div>
-
           <motion.div
-            className="mt-16 max-w-3xl mx-auto"
+            className="max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.3 }}
           >
-            <h3 className="text-2xl font-bold mb-8 text-white">Technology Stack</h3>
             <TechStack />
           </motion.div>
         </div>

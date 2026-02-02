@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import type { Project } from "@/data/projects"
+import type { Project } from "@/types"
 import { motion } from "framer-motion"
 import { CheckCircle, Circle, Clock, ExternalLink, GitFork, Github, Star } from "lucide-react"
 import Image from "next/image"
@@ -15,13 +15,17 @@ export default function ProjectCard({
   title,
   description,
   longDescription,
-  image,
-  tags,
-  link,
-  demo,
+  imageUrl,
+  technologies,
+  repositoryUrl,
+  liveDemoUrl,
   status,
   githubStats,
 }: ProjectCardProps) {
+  const image = imageUrl
+  const tags = technologies
+  const link = repositoryUrl
+  const demo = liveDemoUrl
   const [isHovered, setIsHovered] = useState(false)
 
   // Generate a consistent color based on the project title

@@ -4,12 +4,13 @@ import FeaturedProject from "@/components/featured-project"
 import ProjectCard from "@/components/project-card"
 import ProjectFilter from "@/components/project-filter"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { projects } from "@/data/projects"
+import { useProjects } from "@/hooks/use-projects"
 import { AnimatePresence, motion } from "framer-motion"
-import { Briefcase, CheckCircle, Clock, Star } from "lucide-react"
+import { Briefcase, CheckCircle, Clock, Star, Loader2 } from "lucide-react"
 import { useEffect, useState } from "react"
 
 export default function ProjectsSection() {
+  const { projects, loading, error } = useProjects()
   const [filteredProjects, setFilteredProjects] = useState(projects)
   const [selectedTags, setSelectedTags] = useState<string[]>([])
   const [activeTab, setActiveTab] = useState("all")
@@ -29,7 +30,7 @@ export default function ProjectsSection() {
 
     // Apply tag filters
     if (selectedTags.length > 0) {
-      result = result.filter((project) => selectedTags.some((tag) => project.tags.includes(tag)))
+      result = result.filter((project) => selectedTags.some((tag) => project.technologies.includes(tag)))
     }
 
     // Apply tab filters
@@ -42,7 +43,32 @@ export default function ProjectsSection() {
     }
 
     setFilteredProjects(result)
-  }, [selectedTags, activeTab])
+  }, [selectedTags, activeTab, projects])
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-[#6366f1]" />
+        <span className="ml-3 text-[#a0a0a0]">Loading projects...</span>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-red-500 mb-4">Error loading projects: {error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-[#6366f1] text-white rounded-md hover:bg-[#5558e3] transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    )
+  }
 
   return (
     <div>

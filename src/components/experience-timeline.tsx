@@ -3,105 +3,60 @@
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { AnimatePresence, motion } from "framer-motion"
-import { Award, Building, Calendar, ChevronDown, ChevronUp, ExternalLink } from "lucide-react"
+import { Award, Building, Calendar, ChevronDown, ChevronUp, ExternalLink, Loader2 } from "lucide-react"
 import { useState } from "react"
-
-interface ExperienceItem {
-  title: string
-  company: string
-  period: string
-  description: string
-  achievements?: string[]
-  skills?: string[]
-  companyUrl?: string
-  location?: string
-}
+import { useExperience } from "@/hooks/use-experience"
 
 export default function ExperienceTimeline() {
+  const { experiences: apiExperiences, loading, error } = useExperience()
   const [expandedIndex, setExpandedIndex] = useState<number | null>(null)
 
-  const experiences: ExperienceItem[] = [
-    {
-      title: "Mid-Level Backend Developer",
-      company: "Protech Solutions",
-      companyUrl: "https://protechsolutions.com",
-      location: "Aracaju, SE",
-      period: "Jan/2025 - present",
-      description:
-        "Leading backend development for the Mastercard integration project with BANESE credit cards, focusing on secure API development and financial system integration.",
-      achievements: [
-        "Designed and implemented secure API architecture for Mastercard integration",
-        "Reduced transaction processing time by 35% through optimized database queries",
-        "Implemented comprehensive logging and monitoring systems for financial transactions",
-        "Collaborated with cross-functional teams to ensure compliance with financial regulations",
-      ],
-      skills: ["C#", ".NET", "Redis", "Docker", "Azure DevOps", "RESTful APIs", "Microservices"],
-    },
-    {
-      title: "Mid-Level Developer",
-      company: "Banese",
-      companyUrl: "https://www.banese.com.br",
-      location: "Aracaju, SE",
-      period: "Mar/2024 - Jan/2025",
-      description:
-        "Developed a centralized automation environment using an agent-server model with Python and .NET, from concept to implementation.",
-      achievements: [
-        "Architected and implemented a centralized automation platform that reduced manual processes by 60%",
-        "Created Python-based automations that saved approximately 25 hours of manual work per week",
-        "Integrated legacy banking systems with modern web interfaces",
-        "Implemented CI/CD pipelines using Jenkins for automated testing and deployment",
-      ],
-      skills: ["Python", "C#", ".NET", "PostgreSQL", "Azure DevOps", "Docker", "Jenkins", "CI/CD"],
-    },
-    {
-      title: "Junior Developer",
-      company: "Banese",
-      companyUrl: "https://www.banese.com.br",
-      location: "Aracaju, SE",
-      period: "Sep/2023 - Feb/2024",
-      description:
-        "Developed Python automations for banking processes using Selenium and PyAutoGUI, optimizing repetitive tasks and increasing operational efficiency.",
-      achievements: [
-        "Automated 15+ critical banking processes, reducing manual errors by 90%",
-        "Created a file processing system that handled over 10,000 documents monthly",
-        "Developed a reporting dashboard for monitoring automation performance",
-        "Trained team members on automation best practices",
-      ],
-      skills: ["Python", "Selenium", "PyAutoGUI", "Process Automation", "Banking Systems"],
-    },
-    {
-      title: "Trainee Banese Labs",
-      company: "Banese",
-      companyUrl: "https://www.banese.com.br",
-      location: "Aracaju, SE",
-      period: "Feb/2023 - Sep/2023",
-      description:
-        "Learned RPA concepts and applications, implementing them in practical scenarios. Studied metaverse technologies and implemented a virtual meeting environment.",
-      achievements: [
-        "Developed a proof-of-concept virtual meeting environment using Unity",
-        "Created 5+ RPA solutions for internal processes",
-        "Participated in innovation workshops and hackathons",
-        "Presented metaverse applications for banking to executive leadership",
-      ],
-      skills: ["Python", "Selenium", "PyAutoGUI", "C#", "Unity", "Metaverse", "RPA"],
-    },
-    {
-      title: "Intern",
-      company: "Medlynx Medical Informatics",
-      companyUrl: "#",
-      location: "Aracaju, SE",
-      period: "Dec/2022 - Sep/2023",
-      description:
-        "Developed web systems using JavaScript, HTML, CSS, and PHP/Laravel, focusing on both front-end and back-end, creating intuitive user interfaces and robust server-side functionality.",
-      achievements: [
-        "Contributed to the development of a patient management system used by 5+ medical clinics",
-        "Implemented responsive UI components that improved user experience",
-        "Created RESTful APIs for medical data integration",
-        "Optimized database queries resulting in 40% faster page load times",
-      ],
-      skills: ["JavaScript", "HTML", "CSS", "C#", "PHP", "Laravel", "MySQL"],
-    },
-  ]
+  // Format period from API dates
+  const formatPeriod = (startDate: string, endDate?: string, isCurrent?: boolean) => {
+    const start = new Date(startDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    if (isCurrent) return `${start} - present`
+    if (!endDate) return start
+    const end = new Date(endDate).toLocaleDateString('en-US', { month: 'short', year: 'numeric' })
+    return `${start} - ${end}`
+  }
+
+  // Map API data to component format
+  const experiences = apiExperiences.map(exp => ({
+    title: exp.position,
+    company: exp.companyName,
+    period: formatPeriod(exp.startDate, exp.endDate, exp.isCurrentlyWorkingHere),
+    description: exp.description,
+    achievements: exp.highlights,
+    skills: exp.technologies,
+    companyUrl: '#',
+    location: exp.location
+  }))
+
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <Loader2 className="w-8 h-8 animate-spin text-[#6366f1]" />
+        <span className="ml-3 text-[#a0a0a0]">Loading experiences...</span>
+      </div>
+    )
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="text-center py-20">
+        <p className="text-red-500 mb-4">Error loading experiences: {error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="px-4 py-2 bg-[#6366f1] text-white rounded-md hover:bg-[#5558e3] transition-colors"
+        >
+          Retry
+        </button>
+      </div>
+    )
+  }
+
 
   const toggleExpand = (index: number) => {
     setExpandedIndex(expandedIndex === index ? null : index)
@@ -109,28 +64,30 @@ export default function ExperienceTimeline() {
 
   return (
     <div className="relative px-4 max-w-3xl mx-auto">
-      {/* Vertical timeline line */}
-      <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-1 bg-[#333] transform md:translate-x-[-0.5px] z-0"></div>
+      {/* Vertical timeline line - centered */}
+      <div className="absolute left-[39px] md:left-1/2 top-0 bottom-0 w-0.5 bg-[#333] md:-translate-x-1/2 z-0"></div>
 
       <div className="space-y-12">
         {experiences.map((experience, index) => (
-          <motion.div
+          <div
             key={index}
-            className={`relative ${index % 2 === 0 ? "md:pr-12 md:text-right md:ml-auto md:mr-[50%]" : "md:pl-12 md:ml-[50%]"} pl-16 md:pl-0 md:w-[calc(50%-12px)]`}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            transition={{ delay: index * 0.1 }}
+            className="relative"
           >
-            {/* Circle on timeline */}
+            {/* Circle on timeline - always centered on line */}
             <motion.div
-              className={`absolute left-7 md:left-auto ${
-                index % 2 === 0 ? "md:right-[-8px]" : "md:left-[-8px]"
-              } top-1.5 w-5 h-5 bg-[#6366f1] rounded-full z-10 border-2 border-[#0f0f0f] shadow-lg`}
+              className="absolute w-4 h-4 bg-[#6366f1] rounded-full z-10 border-2 border-[#0f0f0f] shadow-lg top-6 left-[32px] md:left-1/2 md:-translate-x-1/2"
               whileInView={{ scale: [0, 1.5, 1] }}
               viewport={{ once: true }}
               transition={{ duration: 0.5 }}
             ></motion.div>
+            
+            <motion.div
+              className={`relative ${index % 2 === 0 ? "md:pr-12 md:text-right md:mr-[50%]" : "md:pl-12 md:ml-[50%]"} pl-16 md:pl-0 md:w-[calc(50%-24px)]`}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ delay: index * 0.1 }}
+            >
 
             <motion.div
               className="bg-[#1a1a1a] p-6 rounded-lg border border-[#2a2a2a] hover:border-[#6366f1] transition-colors duration-300"
@@ -243,6 +200,7 @@ export default function ExperienceTimeline() {
               </div>
             </motion.div>
           </motion.div>
+          </div>
         ))}
       </div>
     </div>

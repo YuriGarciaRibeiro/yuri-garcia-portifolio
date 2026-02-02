@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { AlertCircle, CheckCircle, Loader2 } from "lucide-react"
 import { useState } from "react"
+import { api } from "@/lib/api"
 
 interface FormState {
   name: string
@@ -73,9 +74,8 @@ export default function ContactForm() {
     setIsSubmitting(true)
 
     try {
-      // In a real implementation, you would send the form data to your backend
-      // For now, we'll simulate a successful submission after a delay
-      await new Promise((resolve) => setTimeout(resolve, 1500))
+      // Send form data to API
+      await api.post('/api/contact', formState)
 
       // Show success message
       setSubmitStatus("success")
@@ -91,7 +91,7 @@ export default function ContactForm() {
       setTimeout(() => {
         setSubmitStatus("idle")
       }, 5000)
-    } catch (error) {
+    } catch (error: any) {
       console.error("Form submission error:", error)
       setSubmitStatus("error")
 
